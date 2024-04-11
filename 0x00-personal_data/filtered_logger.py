@@ -28,7 +28,7 @@ class RedactingFormatter(logging.Formatter):
 PII_FIELDS = ("name", "email", "password", "ssn", "phone")
 
 
-def get_db() -> mysql.connector.connection.MYSQLConnection:
+def get_db():
     """ Connection to MySQL environment """
     db_connect = mysql.connector.connect(
         user=os.getenv('PERSONAL_DATA_DB_USERNAME', 'root'),
@@ -37,6 +37,7 @@ def get_db() -> mysql.connector.connection.MYSQLConnection:
         database=os.getenv('PERSONAL_DATA_DB_NAME')
     )
     return db_connect
+
 
 
 def filter_datum(fields: List[str], redaction: str, message: str,
@@ -58,7 +59,7 @@ def get_logger() -> logging.Logger:
     target_handler.setLevel(logging.INFO)
 
     formatter = RedactingFormatter(list(PII_FIELDS))
-    target_handle.setFormatter(formatter)
+    target_handler.setFormatter(formatter)
 
     logger.addHandler(target_handler)
     return logger
